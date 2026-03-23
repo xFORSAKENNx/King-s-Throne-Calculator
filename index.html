@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>King's Throne - Pro Hero Calculator</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f0f2f5; color: #1c1e21; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; text-align: center; }
+        .section { margin-bottom: 20px; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; }
+        .attribute-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .attr-column { padding: 12px; border-radius: 6px; border-top: 5px solid #ccc; background: #fafafa; }
+        .mil { border-color: #d32f2f; } .for { border-color: #fbc02d; } .pro { border-color: #388e3c; } .ins { border-color: #0288d1; }
+        label { display: block; font-size: 0.85em; font-weight: bold; margin-top: 8px; color: #555; }
+        input { width: 100%; padding: 5px; border: 1px solid #bdc3c7; border-radius: 4px; box-sizing: border-box; }
+        .projections { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .proj-box { background: #e7f3ff; padding: 15px; border-radius: 8px; border: 1px solid #bbdefb; }
+        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .res-highlight { font-weight: bold; color: #2e7d32; font-size: 1.2em; }
+        .total-highlight { font-size: 1.5em; color: #c62828; text-align: center; display: block; margin-top: 10px; }
+        .beast-q { background-color: #fff3e0; border: 1px solid #ffe0b2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Kingdom Strategy - Hero Mastery</h2>
+
+    <div class="section">
+        <label>Current Hero Level:</label>
+        <input type="text" id="lvl_now" placeholder="e.g. 350" oninput="run()">
+    </div>
+
+    <div class="attribute-grid">
+        <div class="attr-column mil">
+            <strong>Military</strong>
+            <label>Quality (Stars):</label><input type="text" id="mil_q" oninput="run()">
+            <label class="beast-q">Beast Skill Quality:</label><input type="text" id="mil_bq" class="beast-q" oninput="run()">
+            <label>Tome Bonus:</label><input type="text" id="mil_tome" oninput="run()">
+            <label>Bond Bonus:</label><input type="text" id="mil_bond" oninput="run()">
+            <label>Beast Bonus:</label><input type="text" id="mil_beast" oninput="run()">
+            <label>Equipment:</label><input type="text" id="mil_eq" oninput="run()">
+            <label>Artifact:</label><input type="text" id="mil_art" oninput="run()">
+        </div>
+        <div class="attr-column for">
+            <strong>Fortune</strong>
+            <label>Quality:</label><input type="text" id="for_q" oninput="run()">
+            <label class="beast-q">Beast Skill Quality:</label><input type="text" id="for_bq" class="beast-q" oninput="run()">
+            <label>Tome Bonus:</label><input type="text" id="for_tome" oninput="run()">
+            <label>Bond Bonus:</label><input type="text" id="for_bond" oninput="run()">
+            <label>Beast Bonus:</label><input type="text" id="for_beast" oninput="run()">
+            <label>Equipment:</label><input type="text" id="for_eq" oninput="run()">
+            <label>Artifact:</label><input type="text" id="for_art" oninput="run()">
+        </div>
+        <div class="attr-column pro">
+            <strong>Provisions</strong>
+            <label>Quality:</label><input type="text" id="pro_q" oninput="run()">
+            <label class="beast-q">Beast Skill Quality:</label><input type="text" id="pro_bq" class="beast-q" oninput="run()">
+            <label>Tome Bonus:</label><input type="text" id="pro_tome" oninput="run()">
+            <label>Bond Bonus:</label><input type="text" id="pro_bond" oninput="run()">
+            <label>Beast Bonus:</label><input type="text" id="pro_beast" oninput="run()">
+            <label>Equipment:</label><input type="text" id="pro_eq" oninput="run()">
+            <label>Artifact:</label><input type="text" id="pro_art" oninput="run()">
+        </div>
+        <div class="attr-column ins">
+            <strong>Inspiration</strong>
+            <label>Quality:</label><input type="text" id="ins_q" oninput="run()">
+            <label class="beast-q">Beast Skill Quality:</label><input type="text" id="ins_bq" class="beast-q" oninput="run()">
+            <label>Tome Bonus:</label><input type="text" id="ins_tome" oninput="run()">
+            <label>Bond Bonus:</label><input type="text" id="ins_bond" oninput="run()">
+            <label>Beast Bonus:</label><input type="text" id="ins_beast" oninput="run()">
+            <label>Equipment:</label><input type="text" id="ins_eq" oninput="run()">
+            <label>Artifact:</label><input type="text" id="ins_art" oninput="run()">
+        </div>
+    </div>
+
+    <div class="projections">
+        <div class="proj-box">
+            <strong>1. Level Up Projection</strong>
+            <label>Total Quality (All Attr):</label>
+            <input type="text" id="total_q_proj" placeholder="e.g. 6033" oninput="run()">
+            <label>Target Level:</label>
+            <input type="text" id="lvl_target" placeholder="e.g. 355" oninput="run()">
+            <p>Power Gain: <span id="gain_lvl" class="res-highlight">0</span></p>
+        </div>
+
+        <div class="proj-box">
+            <strong>2. Paragon Upgrade Projection</strong>
+            <label>Paragon % Increase (e.g. 5):</label>
+            <input type="text" id="para_perc" placeholder="5" oninput="run()">
+            <div class="checkbox-group">
+                <span><input type="checkbox" id="c_mil" onchange="run()"> Mil</span>
+                <span><input type="checkbox" id="c_for" onchange="run()"> For</span>
+                <span><input type="checkbox" id="c_pro" onchange="run()"> Pro</span>
+                <span><input type="checkbox" id="c_ins" onchange="run()"> Ins</span>
+            </div>
+            <p>Paragon Gain: <span id="gain_para" class="res-highlight">0</span></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <strong style="display:block; text-align:center;">CURRENT TOTAL POWER</strong>
+        <span id="total_now" class="total-highlight">0</span>
+    </div>
+</div>
+
+<script>
+    function parse(v) {
+        if(!v) return 0;
+        v = v.toString().toUpperCase().replace(',', '.').trim();
+        let m = 1;
+        if(v.endsWith('K')) m = 1e3;
+        if(v.endsWith('M')) m = 1e6;
+        if(v.endsWith('B')) m = 1e9;
+        let n = parseFloat(v.replace(/[KMB]/g, ''));
+        return isNaN(n) ? 0 : n * m;
+    }
+
+    function fmt(n) { return n.toLocaleString('en-US', {maximumFractionDigits: 0}); }
+
+    function getQBonus(q, l) { return 0.1 * q * (Math.pow(l, 2) + l + 98); }
+
+    function run() {
+        const lNow = parse(document.getElementById('lvl_now').value);
+        const lTar = parse(document.getElementById('lvl_target').value);
+        const qProj = parse(document.getElementById('total_q_proj').value);
+        const pPer = parse(document.getElementById('para_perc').value) / 100;
+
+        function getAttrData(id) {
+            const qBase = parse(document.getElementById(id+'_q').value);
+            const qBeast = parse(document.getElementById(id+'_bq').value);
+            const totalQ = qBase + qBeast; // Qualidade Real do Herói
+
+            const t = parse(document.getElementById(id+'_tome').value);
+            const b = parse(document.getElementById(id+'_bond').value);
+            const be = parse(document.getElementById(id+'_beast').value);
+            const eq = parse(document.getElementById(id+'_eq').value);
+            const art = parse(document.getElementById(id+'_art').value);
+            
+            const qbNow = getQBonus(totalQ, lNow);
+            
+            return {
+                baseNow: qbNow + t + b + be + eq + art,
+                paraBase: qbNow + t + b
+            };
+        }
+
+        const m = getAttrData('mil');
+        const f = getAttrData('for');
+        const p = getAttrData('pro');
+        const i = getAttrData('ins');
+
+        // Total Atual
+        document.getElementById('total_now').innerText = fmt(m.baseNow + f.baseNow + p.baseNow + i.baseNow);
+
+        // Ganho de Nível (Usando a Qualidade Total inserida na Projeção)
+        let lGain = 0;
+        if(lTar > 0 && qProj > 0) {
+            const qbNowProj = getQBonus(qProj, lNow);
+            const qbTarProj = getQBonus(qProj, lTar);
+            lGain = qbTarProj - qbNowProj;
+        }
+        document.getElementById('gain_lvl').innerText = "+" + fmt(lGain);
+
+        // Ganho de Paragon
+        let pGain = 0;
+        if(pPer > 0) {
+            if(document.getElementById('c_mil').checked) pGain += m.paraBase * pPer;
+            if(document.getElementById('c_for').checked) pGain += f.paraBase * pPer;
+            if(document.getElementById('c_pro').checked) pGain += p.paraBase * pPer;
+            if(document.getElementById('c_ins').checked) pGain += i.paraBase * pPer;
+        }
+        document.getElementById('gain_para').innerText = "+" + fmt(pGain);
+    }
+</script>
+</body>
+</html>
